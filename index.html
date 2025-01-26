@@ -112,8 +112,8 @@
     
     <div class="board" id="board"></div>
     <div class="status" id="status">Your turn!</div>
-    <button onclick="resetGame()">Reset Game</button>
-    <button onclick="newGame()">New Game</button>
+    <button onclick="resetGame()">Reset Round</button>
+    <button onclick="resetScore()">Reset All Scores</button>
 
     <script>
         let board = Array(9).fill('');
@@ -198,16 +198,36 @@
             }, 500);
         }
 
+        function updateScore(result) {
+            if (result === human) {
+                scores.player += 1;
+            } else if (result === ai) {
+                scores.ai += 1;
+            } else if (result === 'draw') {
+                scores.player += 0.5;
+                scores.ai += 0.5;
+            }
+        
+            // Format angka untuk tampilan (0.5 tetap ditampilkan)
+            document.getElementById('player-score').textContent = Number.isInteger(scores.player) ? 
+                scores.player : scores.player.toFixed(1);
+            
+            document.getElementById('ai-score').textContent = Number.isInteger(scores.ai) ? 
+                scores.ai : scores.ai.toFixed(1);
+            
+            localStorage.setItem('scores', JSON.stringify(scores));
+        }
+
         function makeMove(index, player) {
             board[index] = player;
             document.querySelectorAll('.cell')[index].classList.add(player.toLowerCase());
             document.querySelectorAll('.cell')[index].textContent = player;
-            
+        
             if (checkWinner(player)) {
                 gameActive = false;
                 updateScore(player);
                 document.getElementById('status').textContent = 
-                    `${player === human ? 'You win!' : 'AI wins!'}`;
+                    `${player === human ? 'You win! 🎉' : 'AI wins! 🤖'}`;
                 confetti({
                     particleCount: 100,
                     spread: 70,
@@ -215,20 +235,14 @@
                 });
             } else if (board.every(cell => cell !== '')) {
                 gameActive = false;
-                document.getElementById('status').textContent = "It's a draw!";
+                document.getElementById('status').textContent = "It's a draw! 🤝";
+                updateScore('draw'); // Tambahkan poin draw
             } else {
                 document.getElementById('status').textContent = 
-                    `${currentPlayer === human ? 'Your turn!' : 'AI is thinking...'}`;
+                    `${currentPlayer === human ? 'Your turn! ⏳' : 'AI is thinking... 💭'}`;
             }
         }
 
-        function updateScore(winner) {
-            if (winner === human) scores.player++;
-            if (winner === ai) scores.ai++;
-            localStorage.setItem('scores', JSON.stringify(scores));
-            document.getElementById('player-score').textContent = scores.player;
-            document.getElementById('ai-score').textContent = scores.ai;
-        }
 
         function resetGame() {
             board = Array(9).fill('');
@@ -239,10 +253,14 @@
         }
 
         function newGame() {
+        resetGame(); // Hanya reset papan permainan, tidak reset skor
+        }
+
+        // Tambahkan fungsi baru untuk reset skor
+        function resetScore() {
             scores = { player: 0, ai: 0 };
             localStorage.setItem('scores', JSON.stringify(scores));
             updateScore();
-            resetGame();
         }
 
         // Initial setup
