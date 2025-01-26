@@ -37,4 +37,4 @@ A modern implementation of the classic Tic-Tac-Toe game featuring an unbeatable 
 
 1. Clone the repository:  
    ```bash
-   git clone https://github.com/yourusername/tic-tac-toe-ai.git
+   git clone https://github.com/paradoxically/tic-tac-toe.git
