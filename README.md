@@ -4,7 +4,7 @@
 
 A modern implementation of the classic Tic-Tac-Toe game featuring an unbeatable AI opponent powered by the Minimax algorithm, complete with score tracking and immersive visual effects.
 
-![Game Screenshot](/screenshot.png) <!-- Add the actual screenshot later -->
+![Game Screenshot](/screenshot.jpeg) <!-- Add the actual screenshot later -->
 
 ## ✨ Features
 
