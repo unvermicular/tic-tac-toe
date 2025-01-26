@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe - Minimax AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Roboto:wght@300;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #2a2a72;
+            --secondary: #009ffd;
+            --accent: #ff0076;
+            --bg: #0a0a1a;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(45deg, var(--bg), #1a1a2e);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .scoreboard {
+            display: flex;
+            gap: 2rem;
+            margin: 20px;
+            font-size: 1.2rem;
+            background: rgba(255,255,255,0.1);
+            padding: 15px 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,159,253,0.2);
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px;
+            max-width: 500px;
+            width: 90vw;
+            aspect-ratio: 1/1;
+        }
+
+        .cell {
+            background: rgba(255,255,255,0.05);
+            border: 2px solid var(--secondary);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .cell:hover:not(.disabled) {
+            background: rgba(0,159,253,0.1);
+            transform: scale(1.05);
+        }
+
+        .cell.x { color: var(--secondary); }
+        .cell.o { color: var(--accent); }
+
+        .disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .status {
+            font-size: 1.5rem;
+            margin: 20px;
+            text-align: center;
+            min-height: 2rem;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            margin: 10px;
+        }
+
+        button:hover {
+            background: var(--secondary);
+            transform: scale(1.05);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="scoreboard">
+        <div>Player: <span id="player-score">0</span></div>
+        <div>AI: <span id="ai-score">0</span></div>
+    </div>
+    
+    <div class="board" id="board"></div>
+    <div class="status" id="status">Your turn!</div>
+    <button onclick="resetGame()">Reset Game</button>
+    <button onclick="newGame()">New Game</button>
+
+    <script>
+        let board = Array(9).fill('');
+        let human = 'X';
+        let ai = 'O';
+        let currentPlayer = human;
+        let gameActive = true;
+        let scores = JSON.parse(localStorage.getItem('scores')) || { player: 0, ai: 0 };
+
+        const winCombos = [
+            [0,1,2], [3,4,5], [6,7,8], // Rows
+            [0,3,6], [1,4,7], [2,5,8], // Columns
+            [0,4,8], [2,4,6] // Diagonals
+        ];
+
+        // Initialize board
+        function initBoard() {
+            const boardEl = document.getElementById('board');
+            boardEl.innerHTML = '';
+            
+            board.forEach((_, index) => {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                cell.setAttribute('data-index', index);
+                cell.addEventListener('click', handleClick);
+                boardEl.appendChild(cell);
+            });
+        }
+
+        // Minimax algorithm
+        function minimax(board, depth, isMaximizing) {
+            if (checkWinner(ai)) return { score: 1 };
+            if (checkWinner(human)) return { score: -1 };
+            if (board.every(cell => cell !== '')) return { score: 0 };
+
+            const best = { score: isMaximizing ? -Infinity : Infinity };
+
+            for (let i = 0; i < 9; i++) {
+                if (board[i] !== '') continue;
+                
+                board[i] = isMaximizing ? ai : human;
+                const result = minimax(board, depth + 1, !isMaximizing);
+                board[i] = '';
+                
+                if (isMaximizing) {
+                    if (result.score > best.score) {
+                        best.score = result.score;
+                        best.index = i;
+                    }
+                } else {
+                    if (result.score < best.score) {
+                        best.score = result.score;
+                        best.index = i;
+                    }
+                }
+            }
+            return best;
+        }
+
+        function checkWinner(player) {
+            return winCombos.some(combo => 
+                combo.every(index => board[index] === player)
+            );
+        }
+
+        function handleClick(e) {
+            const index = e.target.getAttribute('data-index');
+            
+            if (board[index] !== '' || !gameActive || currentPlayer !== human) return;
+            
+            makeMove(index, human);
+            
+            if (!gameActive) return;
+            
+            currentPlayer = ai;
+            document.getElementById('status').textContent = "AI is thinking...";
+            
+            setTimeout(() => {
+                const bestMove = minimax(board, 0, true).index;
+                makeMove(bestMove, ai);
+                currentPlayer = human;
+            }, 500);
+        }
+
+        function makeMove(index, player) {
+            board[index] = player;
+            document.querySelectorAll('.cell')[index].classList.add(player.toLowerCase());
+            document.querySelectorAll('.cell')[index].textContent = player;
+            
+            if (checkWinner(player)) {
+                gameActive = false;
+                updateScore(player);
+                document.getElementById('status').textContent = 
+                    `${player === human ? 'You win!' : 'AI wins!'}`;
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            } else if (board.every(cell => cell !== '')) {
+                gameActive = false;
+                document.getElementById('status').textContent = "It's a draw!";
+            } else {
+                document.getElementById('status').textContent = 
+                    `${currentPlayer === human ? 'Your turn!' : 'AI is thinking...'}`;
+            }
+        }
+
+        function updateScore(winner) {
+            if (winner === human) scores.player++;
+            if (winner === ai) scores.ai++;
+            localStorage.setItem('scores', JSON.stringify(scores));
+            document.getElementById('player-score').textContent = scores.player;
+            document.getElementById('ai-score').textContent = scores.ai;
+        }
+
+        function resetGame() {
+            board = Array(9).fill('');
+            gameActive = true;
+            currentPlayer = human;
+            document.getElementById('status').textContent = "Your turn!";
+            initBoard();
+        }
+
+        function newGame() {
+            scores = { player: 0, ai: 0 };
+            localStorage.setItem('scores', JSON.stringify(scores));
+            updateScore();
+            resetGame();
+        }
+
+        // Initial setup
+        document.getElementById('player-score').textContent = scores.player;
+        document.getElementById('ai-score').textContent = scores.ai;
+        initBoard();
+    </script>
+</body>
+</html>
