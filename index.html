@@ -5,619 +5,555 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tic Tac Toe</title>
     <style>
-        /* Variabel tema */
-    :root {
-        /* Default styling */
-        --bg-color: #f8f9fa;
-        --primary-color: #212529;
-        --secondary-color: #6c757d;
-        --accent-color: #0d6efd;
-        --grid-color: #343a40;
-        --x-color: #dc3545;
-        --o-color: #0d6efd;
-        --button-bg: #e9ecef;
-        --button-text: #212529;
-        --button-hover: #dee2e6;
-        --cell-bg: #ffffff;
-        --settings-bg: #ffffff;
-    }
-    
-    body {
-        background-color: var(--bg-color);
-        color: var(--primary-color);
-        transition: all 0.3s ease;
-    }
-    
-    button, .theme-option {
-        background-color: var(--button-bg);
-        color: var(--button-text);
-        border: none;
-        border-radius: 5px;
-        padding: 8px 12px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-    
-    button:hover, .theme-option:hover {
-        background-color: var(--button-hover);
-        transform: translateY(-2px);
-    }
-    
-    .cell {
-        background-color: var(--cell-bg);
-        border: 2px solid var(--grid-color);
-    }
-    
-    .x-symbol {
-        color: var(--x-color);
-    }
-    
-    .o-symbol {
-        color: var(--o-color);
-    }
-    
-    /* Tema yang dipertahankan */
-    .theme-light {
-        --bg-color: #f8f9fa;
-        --primary-color: #212529;
-        --secondary-color: #6c757d;
-        --accent-color: #0d6efd;
-        --grid-color: #343a40;
-        --x-color: #dc3545;
-        --o-color: #0d6efd;
-        --button-bg: #e9ecef;
-        --button-text: #212529;
-        --button-hover: #dee2e6;
-        --cell-bg: #ffffff;
-        --settings-bg: #ffffff;
-    }
-    
-    .theme-dark {
-        --bg-color: #212529;
-        --primary-color: #f8f9fa;
-        --secondary-color: #adb5bd;
-        --accent-color: #0dcaf0;
-        --grid-color: #495057;
-        --x-color: #f06767;
-        --o-color: #0dcaf0;
-        --button-bg: #343a40;
-        --button-text: #f8f9fa;
-        --button-hover: #495057;
-        --cell-bg: #343a40;
-        --settings-bg: #343a40;
-    }
-    
-    /* 10 Tema Baru */
-    .theme-minimalist {
-        --bg-color: #ffffff;
-        --primary-color: #333333;
-        --secondary-color: #666666;
-        --accent-color: #999999;
-        --grid-color: #dddddd;
-        --x-color: #555555;
-        --o-color: #777777;
-        --button-bg: #f5f5f5;
-        --button-text: #333333;
-        --button-hover: #eeeeee;
-        --cell-bg: #fafafa;
-        --settings-bg: #ffffff;
-    }
-    
-    .theme-ocean {
-        --bg-color: #e0f7fa;
-        --primary-color: #006064;
-        --secondary-color: #0097a7;
-        --accent-color: #00bcd4;
-        --grid-color: #4dd0e1;
-        --x-color: #006064;
-        --o-color: #00838f;
-        --button-bg: #b2ebf2;
-        --button-text: #006064;
-        --button-hover: #80deea;
-        --cell-bg: #e0f7fa;
-        --settings-bg: #e1f5fe;
-    }
-    
-    .theme-forest {
-        --bg-color: #e8f5e9;
-        --primary-color: #1b5e20;
-        --secondary-color: #388e3c;
-        --accent-color: #4caf50;
-        --grid-color: #81c784;
-        --x-color: #2e7d32;
-        --o-color: #43a047;
-        --button-bg: #c8e6c9;
-        --button-text: #1b5e20;
-        --button-hover: #a5d6a7;
-        --cell-bg: #f1f8e9;
-        --settings-bg: #e8f5e9;
-    }
-    
-    .theme-sunset {
-        --bg-color: #fff8e1;
-        --primary-color: #e65100;
-        --secondary-color: #f57c00;
-        --accent-color: #ff9800;
-        --grid-color: #ffb74d;
-        --x-color: #e65100;
-        --o-color: #ff6f00;
-        --button-bg: #ffe0b2;
-        --button-text: #e65100;
-        --button-hover: #ffcc80;
-        --cell-bg: #fffde7;
-        --settings-bg: #fff8e1;
-    }
-    
-    .theme-monochrome {
-        --bg-color: #fafafa;
-        --primary-color: #212121;
-        --secondary-color: #616161;
-        --accent-color: #9e9e9e;
-        --grid-color: #757575;
-        --x-color: #212121;
-        --o-color: #424242;
-        --button-bg: #eeeeee;
-        --button-text: #212121;
-        --button-hover: #e0e0e0;
-        --cell-bg: #ffffff;
-        --settings-bg: #f5f5f5;
-    }
-    
-    .theme-retro {
-        --bg-color: #ffe0b2;
-        --primary-color: #5d4037;
-        --secondary-color: #795548;
-        --accent-color: #ff9800;
-        --grid-color: #8d6e63;
-        --x-color: #6d4c41;
-        --o-color: #8d6e63;
-        --button-bg: #d7ccc8;
-        --button-text: #4e342e;
-        --button-hover: #bcaaa4;
-        --cell-bg: #ffecb3;
-        --settings-bg: #ffe0b2;
-    }
-    
-    .theme-neon {
-        --bg-color: #212121;
-        --primary-color: #f5f5f5;
-        --secondary-color: #f0f0f0;
-        --accent-color: #00e676;
-        --grid-color: #69f0ae;
-        --x-color: #ff1744;
-        --o-color: #18ffff;
-        --button-bg: #424242;
-        --button-text: #ffffff;
-        --button-hover: #616161;
-        --cell-bg: #2c2c2c;
-        --settings-bg: #2c2c2c;
-    }
-    
-    .theme-pastel {
-        --bg-color: #f8bbd0;
-        --primary-color: #6a1b9a;
-        --secondary-color: #8e24aa;
-        --accent-color: #ba68c8;
-        --grid-color: #ce93d8;
-        --x-color: #7b1fa2;
-        --o-color: #9c27b0;
-        --button-bg: #e1bee7;
-        --button-text: #6a1b9a;
-        --button-hover: #d1c4e9;
-        --cell-bg: #fce4ec;
-        --settings-bg: #f3e5f5;
-    }
-    
-    .theme-autumn {
-        --bg-color: #fff3e0;
-        --primary-color: #bf360c;
-        --secondary-color: #e64a19;
-        --accent-color: #ff9800;
-        --grid-color: #ffb74d;
-        --x-color: #e65100;
-        --o-color: #ff6f00;
-        --button-bg: #ffe0b2;
-        --button-text: #e65100;
-        --button-hover: #ffcc80;
-        --cell-bg: #fff8e1;
-        --settings-bg: #fff3e0;
-    }
-    
-    .theme-space {
-        --bg-color: #1a237e;
-        --primary-color: #e8eaf6;
-        --secondary-color: #c5cae9;
-        --accent-color: #5c6bc0;
-        --grid-color: #3d5afe;
-        --x-color: #ff9100;
-        --o-color: #00b0ff;
-        --button-bg: #303f9f;
-        --button-text: #e8eaf6;
-        --button-hover: #3949ab;
-        --cell-bg: #283593;
-        --settings-bg: #283593;
-    }
-    
-    /* Styling pilihan tema */
-    .theme-options {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-        gap: 10px;
-        margin-top: 10px;
-    }
-    
-    .theme-option {
-        padding: 8px;
-        border-radius: 5px;
-        cursor: pointer;
-        text-align: center;
-        border: 2px solid transparent;
-        transition: all 0.3s ease;
-    }
-    
-    .theme-option.active {
-        border-color: var(--accent-color);
-        font-weight: 600;
-    }
-        
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            transition: all 0.3s ease;
+        :root {
+            /* Light Theme (Default) */
+            --bg-color: #f5f5f5;
+            --text-color: #333;
+            --header-color: #444;
+            --board-bg: #fff;
+            --cell-border: #ddd;
+            --btn-bg: #e0e0e0;
+            --btn-hover: #d0d0d0;
+            --btn-text: #333;
+            --x-color: #3498db;
+            --o-color: #e74c3c;
+            --winner-bg: rgba(46, 204, 113, 0.3);
+            --settings-bg: rgba(255, 255, 255, 0.95);
+            --settings-border: #ddd;
         }
-        
+
+        /* Dark Theme */
+        [data-theme="dark"] {
+            --bg-color: #222;
+            --text-color: #eee;
+            --header-color: #fff;
+            --board-bg: #333;
+            --cell-border: #444;
+            --btn-bg: #444;
+            --btn-hover: #555;
+            --btn-text: #fff;
+            --x-color: #3498db;
+            --o-color: #e74c3c;
+            --winner-bg: rgba(46, 204, 113, 0.3);
+            --settings-bg: rgba(34, 34, 34, 0.95);
+            --settings-border: #444;
+        }
+
+        /* Minimalist Theme */
+        [data-theme="minimalist"] {
+            --bg-color: #fff;
+            --text-color: #333;
+            --header-color: #333;
+            --board-bg: #fff;
+            --cell-border: #eee;
+            --btn-bg: #f9f9f9;
+            --btn-hover: #f0f0f0;
+            --btn-text: #333;
+            --x-color: #555;
+            --o-color: #777;
+            --winner-bg: rgba(200, 200, 200, 0.3);
+            --settings-bg: rgba(255, 255, 255, 0.95);
+            --settings-border: #eee;
+        }
+
+        /* Ocean Theme */
+        [data-theme="ocean"] {
+            --bg-color: #e0f7fa;
+            --text-color: #006064;
+            --header-color: #00838f;
+            --board-bg: #b2ebf2;
+            --cell-border: #80deea;
+            --btn-bg: #4dd0e1;
+            --btn-hover: #26c6da;
+            --btn-text: #006064;
+            --x-color: #0277bd;
+            --o-color: #00838f;
+            --winner-bg: rgba(0, 172, 193, 0.3);
+            --settings-bg: rgba(224, 247, 250, 0.95);
+            --settings-border: #80deea;
+        }
+
+        /* Forest Theme */
+        [data-theme="forest"] {
+            --bg-color: #e8f5e9;
+            --text-color: #1b5e20;
+            --header-color: #2e7d32;
+            --board-bg: #c8e6c9;
+            --cell-border: #a5d6a7;
+            --btn-bg: #81c784;
+            --btn-hover: #66bb6a;
+            --btn-text: #1b5e20;
+            --x-color: #2e7d32;
+            --o-color: #558b2f;
+            --winner-bg: rgba(76, 175, 80, 0.3);
+            --settings-bg: rgba(232, 245, 233, 0.95);
+            --settings-border: #a5d6a7;
+        }
+
+        /* Sunset Theme */
+        [data-theme="sunset"] {
+            --bg-color: #fff8e1;
+            --text-color: #ff6f00;
+            --header-color: #f57c00;
+            --board-bg: #ffecb3;
+            --cell-border: #ffd54f;
+            --btn-bg: #ffca28;
+            --btn-hover: #ffc107;
+            --btn-text: #ff6f00;
+            --x-color: #e65100;
+            --o-color: #ff8f00;
+            --winner-bg: rgba(255, 167, 38, 0.3);
+            --settings-bg: rgba(255, 248, 225, 0.95);
+            --settings-border: #ffd54f;
+        }
+
+        /* Monochrome Theme */
+        [data-theme="monochrome"] {
+            --bg-color: #f5f5f5;
+            --text-color: #212121;
+            --header-color: #000;
+            --board-bg: #e0e0e0;
+            --cell-border: #bdbdbd;
+            --btn-bg: #9e9e9e;
+            --btn-hover: #757575;
+            --btn-text: #212121;
+            --x-color: #000;
+            --o-color: #424242;
+            --winner-bg: rgba(158, 158, 158, 0.3);
+            --settings-bg: rgba(245, 245, 245, 0.95);
+            --settings-border: #bdbdbd;
+        }
+
+        /* Retro Theme */
+        [data-theme="retro"] {
+            --bg-color: #ffe0b2;
+            --text-color: #5d4037;
+            --header-color: #4e342e;
+            --board-bg: #d7ccc8;
+            --cell-border: #a1887f;
+            --btn-bg: #bcaaa4;
+            --btn-hover: #a1887f;
+            --btn-text: #3e2723;
+            --x-color: #6d4c41;
+            --o-color: #5d4037;
+            --winner-bg: rgba(161, 136, 127, 0.3);
+            --settings-bg: rgba(255, 224, 178, 0.95);
+            --settings-border: #a1887f;
+        }
+
+        /* Neon Theme */
+        [data-theme="neon"] {
+            --bg-color: #111;
+            --text-color: #fff;
+            --header-color: #0ff;
+            --board-bg: #222;
+            --cell-border: #333;
+            --btn-bg: #0ff;
+            --btn-hover: #0cc;
+            --btn-text: #000;
+            --x-color: #f0f;
+            --o-color: #0f0;
+            --winner-bg: rgba(0, 255, 255, 0.3);
+            --settings-bg: rgba(17, 17, 17, 0.95);
+            --settings-border: #0ff;
+        }
+
+        /* Pastel Theme */
+        [data-theme="pastel"] {
+            --bg-color: #f8bbd0;
+            --text-color: #ad1457;
+            --header-color: #c2185b;
+            --board-bg: #f48fb1;
+            --cell-border: #f06292;
+            --btn-bg: #ec407a;
+            --btn-hover: #e91e63;
+            --btn-text: #fff;
+            --x-color: #ad1457;
+            --o-color: #880e4f;
+            --winner-bg: rgba(236, 64, 122, 0.3);
+            --settings-bg: rgba(248, 187, 208, 0.95);
+            --settings-border: #f06292;
+        }
+
+        /* Autumn Theme */
+        [data-theme="autumn"] {
+            --bg-color: #fff3e0;
+            --text-color: #bf360c;
+            --header-color: #e65100;
+            --board-bg: #ffe0b2;
+            --cell-border: #ffcc80;
+            --btn-bg: #ffb74d;
+            --btn-hover: #ffa726;
+            --btn-text: #bf360c;
+            --x-color: #e65100;
+            --o-color: #bf360c;
+            --winner-bg: rgba(255, 183, 77, 0.3);
+            --settings-bg: rgba(255, 243, 224, 0.95);
+            --settings-border: #ffcc80;
+        }
+
+        /* Space Theme */
+        [data-theme="space"] {
+            --bg-color: #1a237e;
+            --text-color: #e8eaf6;
+            --header-color: #7986cb;
+            --board-bg: #303f9f;
+            --cell-border: #3949ab;
+            --btn-bg: #5c6bc0;
+            --btn-hover: #3f51b5;
+            --btn-text: #e8eaf6;
+            --x-color: #8c9eff;
+            --o-color: #536dfe;
+            --winner-bg: rgba(92, 107, 192, 0.3);
+            --settings-bg: rgba(26, 35, 126, 0.95);
+            --settings-border: #3949ab;
+        }
+
+        /* Colorful Theme */
+        [data-theme="colorful"] {
+            --bg-color: #ffeb3b;
+            --text-color: #d50000;
+            --header-color: #6200ea;
+            --board-bg: #76ff03;
+            --cell-border: #00b0ff;
+            --btn-bg: #ff4081;
+            --btn-hover: #f50057;
+            --btn-text: #fff;
+            --x-color: #6200ea;
+            --o-color: #2962ff;
+            --winner-bg: rgba(255, 64, 129, 0.3);
+            --settings-bg: rgba(255, 235, 59, 0.95);
+            --settings-border: #00b0ff;
+        }
+
+        /* Cyberpunk Theme */
+        [data-theme="cyberpunk"] {
+            --bg-color: #0c0c14;
+            --text-color: #ff00ff;
+            --header-color: #00ffff;
+            --board-bg: #1a1a2e;
+            --cell-border: #282846;
+            --btn-bg: #7b00ff;
+            --btn-hover: #6200cc;
+            --btn-text: #00ffff;
+            --x-color: #ff00ff;
+            --o-color: #00ffff;
+            --winner-bg: rgba(123, 0, 255, 0.3);
+            --settings-bg: rgba(12, 12, 20, 0.95);
+            --settings-border: #7b00ff;
+        }
+
+        /* Coffee Theme */
+        [data-theme="coffee"] {
+            --bg-color: #efebe9;
+            --text-color: #3e2723;
+            --header-color: #4e342e;
+            --board-bg: #d7ccc8;
+            --cell-border: #bcaaa4;
+            --btn-bg: #a1887f;
+            --btn-hover: #8d6e63;
+            --btn-text: #fff;
+            --x-color: #5d4037;
+            --o-color: #4e342e;
+            --winner-bg: rgba(161, 136, 127, 0.3);
+            --settings-bg: rgba(239, 235, 233, 0.95);
+            --settings-border: #bcaaa4;
+        }
+
+        /* Candy Theme */
+        [data-theme="candy"] {
+            --bg-color: #f8bbd0;
+            --text-color: #6a1b9a;
+            --header-color: #9c27b0;
+            --board-bg: #f3e5f5;
+            --cell-border: #e1bee7;
+            --btn-bg: #ba68c8;
+            --btn-hover: #ab47bc;
+            --btn-text: #fff;
+            --x-color: #9c27b0;
+            --o-color: #6a1b9a;
+            --winner-bg: rgba(186, 104, 200, 0.3);
+            --settings-bg: rgba(248, 187, 208, 0.95);
+            --settings-border: #e1bee7;
+        }
+
+        /* Beach Theme */
+        [data-theme="beach"] {
+            --bg-color: #e0f7fa;
+            --text-color: #00796b;
+            --header-color: #0097a7;
+            --board-bg: #b2ebf2;
+            --cell-border: #80deea;
+            --btn-bg: #26c6da;
+            --btn-hover: #00bcd4;
+            --btn-text: #006064;
+            --x-color: #00796b;
+            --o-color: #00695c;
+            --winner-bg: rgba(38, 198, 218, 0.3);
+            --settings-bg: rgba(224, 247, 250, 0.95);
+            --settings-border: #80deea;
+        }
+
         body {
-            background-color: var(--background-color);
-            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
             min-height: 100vh;
-            padding: 2rem;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: all 0.3s ease;
         }
-        
-        h1 {
-            color: var(--primary-color);
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
+
+        header {
             text-align: center;
+            margin-bottom: 30px;
         }
-        
+
+        h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            color: var(--header-color);
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin: 10px 0;
+            color: var(--header-color);
+            opacity: 0.8;
+        }
+
         .game-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            gap: 1.5rem;
-            max-width: 460px;
             width: 100%;
+            max-width: 500px;
         }
-        
-        .score-board {
+
+        .score-container {
             display: flex;
             justify-content: space-around;
             width: 100%;
-            margin-bottom: 1rem;
-            background-color: var(--board-color);
-            padding: 1rem;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .score-box {
+            text-align: center;
+            padding: 10px 20px;
+            background-color: var(--board-bg);
             border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        
-        .score-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .score-label {
+
+        .status-message {
+            margin: 15px 0;
             font-size: 1.2rem;
             font-weight: bold;
-            color: var(--primary-color);
+            height: 1.5em;
         }
-        
-        .score {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--secondary-color);
-        }
-        
-        .game-status {
-            font-size: 1.3rem;
-            font-weight: 600;
-            text-align: center;
-            margin-bottom: 1rem;
-            height: 2rem;
-        }
-        
-        .game-board {
+
+        .board {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-            gap: 10px;
-            background-color: var(--board-color);
+            grid-gap: 10px;
+            margin-bottom: 20px;
+            background-color: var(--board-bg);
             border-radius: 10px;
             padding: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
-        
+
         .cell {
-            width: 100px;
-            height: 100px;
-            background-color: var(--board-color);
-            border: 2px solid var(--board-border-color);
-            border-radius: 5px;
+            width: 80px;
+            height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.2s ease;
+            background-color: var(--board-bg);
+            border: 2px solid var(--cell-border);
+            border-radius: 5px;
+            transition: all 0.2s;
         }
-        
+
         .cell:hover {
-            background-color: var(--cell-hover-color);
+            background-color: var(--btn-hover);
+            transform: scale(1.05);
         }
-        
-        .x {
-            color: var(--primary-color);
+
+        .cell.x {
+            color: var(--x-color);
         }
-        
-        .o {
-            color: var(--secondary-color);
+
+        .cell.o {
+            color: var(--o-color);
         }
-        
+
+        .cell.winner {
+            background-color: var(--winner-bg);
+        }
+
         .controls {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 0.75rem;
-            margin-top: 1rem;
+            gap: 10px;
             width: 100%;
+            margin-bottom: 20px;
         }
-        
+
         button {
-            background-color: var(--button-color);
-            color: var(--button-text-color);
+            padding: 10px 15px;
+            font-size: 1rem;
             border: none;
             border-radius: 5px;
-            padding: 0.7rem 1.2rem;
-            font-size: 1rem;
-            font-weight: 600;
+            background-color: var(--btn-bg);
+            color: var(--btn-text);
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s;
         }
-        
+
         button:hover {
-            background-color: var(--button-hover-color);
-            transform: translateY(-2px);
+            background-color: var(--btn-hover);
+            transform: scale(1.05);
         }
-        
-        button:active {
-            transform: translateY(0);
-        }
-        
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .settings-btn {
+
+        .settings-panel {
             position: fixed;
-            top: 1rem;
-            right: 1rem;
-            background-color: var(--primary-color);
-            color: var(--button-text-color);
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--modal-background);
-        }
-        
-        .modal-content {
-            background-color: var(--modal-content-bg);
-            color: var(--text-color);
-            margin: 15% auto;
-            padding: 2rem;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 450px;
+            max-height: 80vh;
+            overflow-y: auto;
+            background-color: var(--settings-bg);
             border-radius: 10px;
-            width: 80%;
-            max-width: 500px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border: 1px solid var(--settings-border);
+            z-index: 1000;
+            display: none;
         }
-        
-        .modal h2 {
-            margin-bottom: 1.5rem;
-            color: var(--primary-color);
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
-        
-        .close {
-            color: var(--text-color);
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        
-        .close:hover,
-        .close:focus {
-            color: var(--primary-color);
-            text-decoration: none;
+
+        .close-settings {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
             cursor: pointer;
+            color: var(--text-color);
+            padding: 5px;
         }
-        
+
         .settings-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 20px;
         }
-        
+
         .settings-group h3 {
-            margin-bottom: 0.75rem;
-            color: var(--primary-color);
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--cell-border);
+            padding-bottom: 5px;
         }
-        
-        .settings-options {
+
+        .theme-options, .difficulty-options, .symbol-options {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.75rem;
+            gap: 8px;
+            justify-content: center;
         }
-        
-        .theme-preview {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            margin-right: 10px;
-            border: 2px solid var(--board-border-color);
+
+        .theme-btn, .difficulty-btn, .symbol-btn {
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            border-radius: 20px;
         }
-        
-        .light-preview {
-            background-color: #f5f5f5;
-            border: 2px solid #4a6fa5;
+
+        .active {
+            border: 2px solid var(--text-color);
+            font-weight: bold;
         }
-        
-        .dark-preview {
-            background-color: #121212;
-            border: 2px solid #bb86fc;
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
         }
-        
-        .colorful-preview {
-            background: linear-gradient(45deg, #fd5e53, #21bf73, #ffbe0b);
-        }
-        
+
         .history-container {
-            margin-top: 1.5rem;
+            display: none;
+            margin-top: 20px;
+            width: 100%;
             max-height: 200px;
             overflow-y: auto;
-            background-color: var(--board-color);
+            background-color: var(--board-bg);
             border-radius: 10px;
-            padding: 1rem;
-            width: 100%;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        
+
         .history-move {
-            display: flex;
-            align-items: center;
-            padding: 0.5rem;
-            cursor: pointer;
-            border-radius: 5px;
-            margin-bottom: 0.5rem;
+            padding: 5px;
+            margin: 5px 0;
+            border-bottom: 1px solid var(--cell-border);
         }
-        
-        .history-move:hover {
-            background-color: var(--cell-hover-color);
-        }
-        
-        .history-move.active {
-            font-weight: bold;
-            background-color: var(--cell-hover-color);
-        }
-        
+
         @media (max-width: 500px) {
-            .cell {
-                width: 80px;
-                height: 80px;
-                font-size: 2rem;
-            }
-            
-            .controls {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            button {
-                width: 100%;
-            }
-        }
-        
-        @media (max-width: 350px) {
             .cell {
                 width: 60px;
                 height: 60px;
                 font-size: 1.5rem;
             }
+
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            button {
+                width: 100%;
+            }
         }
     </style>
 </head>
-<body>
-    <button id="settingsBtn" class="settings-btn">⚙️</button>
-    
-    <div id="settingsModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Game Settings</h2>
-            
-            <!-- Bagian Pengaturan Game - Pilihan Tema -->
-<div class="settings-section">
-    <h2>Game Theme</h2>
-    <div class="theme-options">
-        <div class="theme-option active" onclick="setTheme('light')">Light</div>
-        <div class="theme-option" onclick="setTheme('dark')">Dark</div>
-        <div class="theme-option" onclick="setTheme('minimalist')">Minimalist</div>
-        <div class="theme-option" onclick="setTheme('ocean')">Ocean</div>
-        <div class="theme-option" onclick="setTheme('forest')">Forest</div>
-        <div class="theme-option" onclick="setTheme('sunset')">Sunset</div>
-        <div class="theme-option" onclick="setTheme('monochrome')">Monochrome</div>
-        <div class="theme-option" onclick="setTheme('retro')">Retro</div>
-        <div class="theme-option" onclick="setTheme('neon')">Neon</div>
-        <div class="theme-option" onclick="setTheme('pastel')">Pastel</div>
-        <div class="theme-option" onclick="setTheme('autumn')">Autumn</div>
-        <div class="theme-option" onclick="setTheme('space')">Space</div>
-    </div>
-</div>
-            
-            <div class="settings-group">
-                <h3>AI Difficulty</h3>
-                <div class="settings-options">
-                    <button class="difficulty-btn" data-difficulty="easy">Easy</button>
-                    <button class="difficulty-btn" data-difficulty="medium">Medium</button>
-                    <button class="difficulty-btn" data-difficulty="hard">Hard</button>
-                </div>
-            </div>
-            
-            <div class="settings-group">
-                <h3>Player Symbol</h3>
-                <div class="settings-options">
-                    <button class="symbol-btn" data-symbol="X">Play as X</button>
-                    <button class="symbol-btn" data-symbol="O">Play as O</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="game-container">
+<body data-theme="light">
+    <header>
         <h1>Tic Tac Toe</h1>
-        
-        <div class="score-board">
-            <div class="score-item">
-                <div class="score-label">Player:</div>
-                <div id="playerScore" class="score">0</div>
+        <h2>Tic Tac Toe</h2>
+    </header>
+
+    <div class="game-container">
+        <div class="score-container">
+            <div class="score-box">
+                <div>Player:</div>
+                <div id="player-score">0</div>
             </div>
-            <div class="score-item">
-                <div class="score-label">AI:</div>
-                <div id="aiScore" class="score">0</div>
+            <div class="score-box">
+                <div>AI:</div>
+                <div id="ai-score">0</div>
             </div>
         </div>
-        
-        <div id="gameStatus" class="game-status">Your turn! 🎮</div>
-        
-        <div id="gameBoard" class="game-board">
+
+        <div class="status-message" id="status">Your turn!</div>
+
+        <div class="board" id="board">
             <div class="cell" data-index="0"></div>
             <div class="cell" data-index="1"></div>
             <div class="cell" data-index="2"></div>
@@ -628,489 +564,487 @@
             <div class="cell" data-index="7"></div>
             <div class="cell" data-index="8"></div>
         </div>
-        
+
         <div class="controls">
-            <button id="undoBtn" disabled>Undo Move</button>
-            <button id="resetRoundBtn">Reset Round</button>
-            <button id="resetScoresBtn">Reset Scores</button>
-            <button id="showHistoryBtn">Show History</button>
+            <button id="settings-btn">Game Settings</button>
+            <button id="undo-btn">Undo Move</button>
+            <button id="reset-round-btn">Reset Round</button>
+            <button id="reset-scores-btn">Reset Scores</button>
+            <button id="history-btn">Show History</button>
         </div>
-        
-        <div id="historyContainer" class="history-container" style="display: none;">
+
+        <div class="history-container" id="history-container">
             <h3>Game History</h3>
-            <div id="moveHistory"></div>
+            <div id="history-list"></div>
         </div>
     </div>
-    
+
+    <div class="overlay" id="overlay"></div>
+
+    <div class="settings-panel" id="settings-panel">
+        <div class="settings-header">
+            <h3>Game Settings</h3>
+            <button class="close-settings" id="close-settings">×</button>
+        </div>
+
+        <div class="settings-group">
+            <h3>Game Theme</h3>
+            <div class="theme-options">
+                <button class="theme-btn active" data-theme="light">Light</button>
+                <button class="theme-btn" data-theme="dark">Dark</button>
+                <button class="theme-btn" data-theme="minimalist">Minimalist</button>
+                <button class="theme-btn" data-theme="ocean">Ocean</button>
+                <button class="theme-btn" data-theme="forest">Forest</button>
+                <button class="theme-btn" data-theme="sunset">Sunset</button>
+                <button class="theme-btn" data-theme="monochrome">Monochrome</button>
+                <button class="theme-btn" data-theme="retro">Retro</button>
+                <button class="theme-btn" data-theme="neon">Neon</button>
+                <button class="theme-btn" data-theme="pastel">Pastel</button>
+                <button class="theme-btn" data-theme="autumn">Autumn</button>
+                <button class="theme-btn" data-theme="space">Space</button>
+                <button class="theme-btn" data-theme="colorful">Colorful</button>
+                <button class="theme-btn" data-theme="cyberpunk">Cyberpunk</button>
+                <button class="theme-btn" data-theme="coffee">Coffee</button>
+                <button class="theme-btn" data-theme="candy">Candy</button>
+                <button class="theme-btn" data-theme="beach">Beach</button>
+            </div>
+        </div>
+
+        <div class="settings-group">
+            <h3>AI Difficulty</h3>
+            <div class="difficulty-options">
+                <button class="difficulty-btn active" data-difficulty="easy">Easy</button>
+                <button class="difficulty-btn" data-difficulty="medium">Medium</button>
+                <button class="difficulty-btn" data-difficulty="hard">Hard</button>
+            </div>
+        </div>
+
+        <div class="settings-group">
+            <h3>Player Symbol</h3>
+            <div class="symbol-options">
+                <button class="symbol-btn active" data-symbol="X">Play as X</button>
+                <button class="symbol-btn" data-symbol="O">Play as O</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Game variables
-        let currentPlayer = 'X';
-        let aiPlayer = 'O';
-        let gameBoard = ['', '', '', '', '', '', '', '', ''];
-        let gameActive = true;
-        let playerScore = 0;
-        let aiScore = 0;
-        let gameHistory = [];
-        let currentStep = -1;
-        let difficulty = 'medium'; // default difficulty
-        
-        // DOM elements
-        const gameBoardElement = document.getElementById('gameBoard');
-        const cells = document.querySelectorAll('.cell');
-        const gameStatus = document.getElementById('gameStatus');
-        const playerScoreElement = document.getElementById('playerScore');
-        const aiScoreElement = document.getElementById('aiScore');
-        const resetRoundBtn = document.getElementById('resetRoundBtn');
-        const resetScoresBtn = document.getElementById('resetScoresBtn');
-        const undoBtn = document.getElementById('undoBtn');
-        const settingsBtn = document.getElementById('settingsBtn');
-        const settingsModal = document.getElementById('settingsModal');
-        const closeModalBtn = document.querySelector('.close');
-        const themeBtns = document.querySelectorAll('.theme-btn');
-        const difficultyBtns = document.querySelectorAll('.difficulty-btn');
-        const symbolBtns = document.querySelectorAll('.symbol-btn');
-        const showHistoryBtn = document.getElementById('showHistoryBtn');
-        const historyContainer = document.getElementById('historyContainer');
-        const moveHistoryElement = document.getElementById('moveHistory');
-        
-        // Winning combinations
-        const winningCombinations = [
-            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
-            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
-            [0, 4, 8], [2, 4, 6]             // Diagonals
-        ];
-        
-        // Initialize the game
-        function initGame() {
-            // Add event listeners to the cells
-            cells.forEach(cell => {
-                cell.addEventListener('click', handleCellClick);
-            });
+        document.addEventListener('DOMContentLoaded', () => {
+            // Game state
+            let board = ['', '', '', '', '', '', '', '', ''];
+            let currentPlayer = 'X';
+            let gameActive = true;
+            let playerSymbol = 'X';
+            let aiSymbol = 'O';
+            let playerScore = 0;
+            let aiScore = 0;
+            let moveHistory = [];
+            let gameHistory = [];
+            let aiDifficulty = 'easy';
             
-            // Add event listeners to buttons
-            resetRoundBtn.addEventListener('click', resetRound);
-            resetScoresBtn.addEventListener('click', resetScores);
-            undoBtn.addEventListener('click', undoMove);
+            // DOM elements
+            const boardElement = document.getElementById('board');
+            const cells = document.querySelectorAll('.cell');
+            const statusDisplay = document.getElementById('status');
+            const playerScoreDisplay = document.getElementById('player-score');
+            const aiScoreDisplay = document.getElementById('ai-score');
+            const historyContainer = document.getElementById('history-container');
+            const historyList = document.getElementById('history-list');
+            const settingsPanel = document.getElementById('settings-panel');
+            const overlay = document.getElementById('overlay');
             
-            // Settings modal
-            settingsBtn.addEventListener('click', () => {
-                settingsModal.style.display = 'block';
-            });
+            // Winning combinations
+            const winningConditions = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+                [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+                [0, 4, 8], [2, 4, 6]             // Diagonals
+            ];
             
-            closeModalBtn.addEventListener('click', () => {
-                settingsModal.style.display = 'none';
-            });
+            // Initialize game
+            initGame();
             
-            window.addEventListener('click', (event) => {
-                if (event.target === settingsModal) {
-                    settingsModal.style.display = 'none';
-                }
-            });
-            
-            // Theme buttons
-            themeBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const theme = btn.getAttribute('data-theme');
-                    document.body.setAttribute('data-theme', theme);
-                    localStorage.setItem('tictactoe-theme', theme);
-                    
-                    // Highlight active theme button
-                    themeBtns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
+            function initGame() {
+                cells.forEach(cell => {
+                    cell.addEventListener('click', () => handleCellClick(cell));
+                    cell.textContent = '';
+                    cell.classList.remove('x', 'o', 'winner');
                 });
-            });
-            
-            // Difficulty buttons
-            difficultyBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    difficulty = btn.getAttribute('data-difficulty');
-                    localStorage.setItem('tictactoe-difficulty', difficulty);
-                    
-                    // Highlight active difficulty button
-                    difficultyBtns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
+                
+                document.getElementById('undo-btn').addEventListener('click', undoMove);
+                document.getElementById('reset-round-btn').addEventListener('click', resetRound);
+                document.getElementById('reset-scores-btn').addEventListener('click', resetScores);
+                document.getElementById('history-btn').addEventListener('click', toggleHistory);
+                document.getElementById('settings-btn').addEventListener('click', toggleSettings);
+                document.getElementById('close-settings').addEventListener('click', toggleSettings);
+                overlay.addEventListener('click', toggleSettings);
+                
+                // Theme buttons
+                document.querySelectorAll('.theme-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        document.body.setAttribute('data-theme', btn.getAttribute('data-theme'));
+                    });
                 });
-            });
-            
-            // Symbol buttons
-            symbolBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const newPlayerSymbol = btn.getAttribute('data-symbol');
-                    if (newPlayerSymbol !== currentPlayer) {
-                        // Swap symbols
-                        currentPlayer = newPlayerSymbol;
-                        aiPlayer = currentPlayer === 'X' ? 'O' : 'X';
-                        localStorage.setItem('tictactoe-player-symbol', currentPlayer);
+                
+                // Difficulty buttons
+                document.querySelectorAll('.difficulty-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        aiDifficulty = btn.getAttribute('data-difficulty');
+                    });
+                });
+                
+                // Symbol buttons
+                document.querySelectorAll('.symbol-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('.symbol-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
                         
-                        // Reset the round with new symbols
-                        resetRound();
+                        const newSymbol = btn.getAttribute('data-symbol');
+                        if (newSymbol !== playerSymbol) {
+                            playerSymbol = newSymbol;
+                            aiSymbol = playerSymbol === 'X' ? 'O' : 'X';
+                            resetRound();
+                            
+                            // If AI goes first (player is O)
+                            if (playerSymbol === 'O') {
+                                setTimeout(makeAiMove, 500);
+                            }
+                        }
+                    });
+                });
+                
+                updateStatusMessage();
+            }
+            
+            function handleCellClick(cell) {
+                const index = cell.getAttribute('data-index');
+                
+                if (board[index] !== '' || !gameActive || currentPlayer !== playerSymbol) {
+                    return;
+                }
+                
+                makeMove(index, playerSymbol);
+                
+                if (gameActive) {
+                    setTimeout(makeAiMove, 500);
+                }
+            }
+            
+            function makeMove(index, symbol) {
+                board[index] = symbol;
+                moveHistory.push({
+                    index: index,
+                    symbol: symbol
+                });
+                
+                const cell = cells[index];
+                cell.textContent = symbol;
+                cell.classList.add(symbol.toLowerCase());
+                
+                updateHistory(`${symbol} played at position ${parseInt(index) + 1}`);
+                
+                if (checkWin(symbol)) {
+                    endGame(false);
+                } else if (checkDraw()) {
+                    endGame(true);
+                } else {
+                    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                    updateStatusMessage();
+                }
+            }
+            
+            function makeAiMove() {
+                if (!gameActive || currentPlayer !== aiSymbol) {
+                    return;
+                }
+                
+                let moveIndex;
+                
+                switch (aiDifficulty) {
+                    case 'hard':
+                        moveIndex = getBestMove();
+                        break;
+                    case 'medium':
+                        if (Math.random() < 0.7) {
+                            moveIndex = getSmartMove();
+                        } else {
+                            moveIndex = getRandomMove();
+                        }
+                        break;
+                    case 'easy':
+                    default:
+                        if (Math.random() < 0.3) {
+                            moveIndex = getSmartMove();
+                        } else {
+                            moveIndex = getRandomMove();
+                        }
+                        break;
+                }
+                
+                makeMove(moveIndex, aiSymbol);
+            }
+            
+            function getRandomMove() {
+                const availableMoves = board.map((cell, index) => cell === '' ? index : null).filter(index => index !== null);
+                return availableMoves[Math.floor(Math.random() * availableMoves.length)];
+            }
+            
+            function getSmartMove() {
+                // First try to win
+                for (let i = 0; i < winningConditions.length; i++) {
+                    const [a, b, c] = winningConditions[i];
+                    if (board[a] === aiSymbol && board[b] === aiSymbol && board[c] === '') {
+                        return c;
                     }
+                    if (board[a] === aiSymbol && board[c] === aiSymbol && board[b] === '') {
+                        return b;
+                    }
+                    if (board[b] === aiSymbol && board[c] === aiSymbol && board[a] === '') {
+                        return a;
+                    }
+                }
+                
+                // Then try to block
+                for (let i = 0; i < winningConditions.length; i++) {
+                    const [a, b, c] = winningConditions[i];
+                    if (board[a] === playerSymbol && board[b] === playerSymbol && board[c] === '') {
+                        return c;
+                    }
+                    if (board[a] === playerSymbol && board[c] === playerSymbol && board[b] === '') {
+                        return b;
+                    }
+                    if (board[b] === playerSymbol && board[c] === playerSymbol && board[a] === '') {
+                        return a;
+                    }
+                }
+                
+                // Take center if available
+                if (board[4] === '') {
+                    return 4;
+                }
+                
+                // Take a random corner
+                const corners = [0, 2, 6, 8].filter(index => board[index] === '');
+                if (corners.length > 0) {
+                    return corners[Math.floor(Math.random() * corners.length)];
+                }
+                
+                // Take any available move
+                return getRandomMove();
+            }
+            
+            function getBestMove() {
+                // Minimax implementation for unbeatable AI
+                function minimax(newBoard, depth, isMaximizing) {
+                    // Check for terminal states
+                    const winner = checkWinningCondition(newBoard);
+                    if (winner === aiSymbol) return 10 - depth;
+                    if (winner === playerSymbol) return depth - 10;
+                    if (checkBoardFull(newBoard)) return 0;
                     
-                    // Highlight active symbol button
-                    symbolBtns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                });
-            });
-            
-            // History button
-            showHistoryBtn.addEventListener('click', toggleHistory);
-            
-            // Load saved settings
-            loadSettings();
-        }
-        
-        // Load saved settings from localStorage
-        function loadSettings() {
-            // Theme
-            const savedTheme = localStorage.getItem('tictactoe-theme') || 'light';
-            document.body.setAttribute('data-theme', savedTheme);
-            document.querySelector(`.theme-btn[data-theme="${savedTheme}"]`).classList.add('active');
-            
-            // Difficulty
-            difficulty = localStorage.getItem('tictactoe-difficulty') || 'medium';
-            document.querySelector(`.difficulty-btn[data-difficulty="${difficulty}"]`).classList.add('active');
-            
-            // Player symbol
-            const savedSymbol = localStorage.getItem('tictactoe-player-symbol');
-            if (savedSymbol) {
-                currentPlayer = savedSymbol;
-                aiPlayer = currentPlayer === 'X' ? 'O' : 'X';
-                document.querySelector(`.symbol-btn[data-symbol="${currentPlayer}"]`).classList.add('active');
-            } else {
-                document.querySelector(`.symbol-btn[data-symbol="X"]`).classList.add('active');
+                    if (isMaximizing) {
+                        let bestScore = -Infinity;
+                        for (let i = 0; i < 9; i++) {
+                            if (newBoard[i] === '') {
+                                newBoard[i] = aiSymbol;
+                                const score = minimax(newBoard, depth + 1, false);
+                                newBoard[i] = '';
+                                bestScore = Math.max(score, bestScore);
+                            }
+                        }
+                        return bestScore;
+                    } else {
+                        let bestScore = Infinity;
+                        for (let i = 0; i < 9; i++) {
+                            if (newBoard[i] === '') {
+                                newBoard[i] = playerSymbol;
+                                const score = minimax(newBoard, depth + 1, true);
+                                newBoard[i] = '';
+                                bestScore = Math.min(score, bestScore);
+                            }
+                        }
+                        return bestScore;
+                    }
+                }
+                
+                function checkWinningCondition(board) {
+                    for (let i = 0; i < winningConditions.length; i++) {
+                        const [a, b, c] = winningConditions[i];
+                        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+                            return board[a];
+                        }
+                    }
+                    return null;
+                }
+                
+                function checkBoardFull(board) {
+                    return board.every(cell => cell !== '');
+                }
+                
+                // Actual minimax move calculation
+                let bestScore = -Infinity;
+                let bestMove;
+                
+                // Add randomness to make the AI beatable occasionally on hard difficulty
+                if (Math.random() < 0.2) {
+                    return getRandomMove();
+                }
+                
+                for (let i = 0; i < 9; i++) {
+                    if (board[i] === '') {
+                        board[i] = aiSymbol;
+                        const score = minimax(board, 0, false);
+                        board[i] = '';
+                        if (score > bestScore) {
+                            bestScore = score;
+                            bestMove = i;
+                        }
+                    }
+                }
+                
+                return bestMove;
             }
-        }
-        
-        // Handle cell click
-        function handleCellClick(event) {
-            const cellIndex = event.target.getAttribute('data-index');
             
-            // Check if the cell is already occupied or the game is not active
-            if (gameBoard[cellIndex] !== '' || !gameActive) return;
-            
-            // Make player move
-            makeMove(cellIndex, currentPlayer);
-            
-            // Check if the game is over after player's move
-            if (gameActive) {
-                // AI's turn
-                setTimeout(() => {
-                    makeAIMove();
-                }, 500);
+            function checkWin(symbol) {
+                for (let i = 0; i < winningConditions.length; i++) {
+                    const [a, b, c] = winningConditions[i];
+                    
+                    if (board[a] === symbol && board[b] === symbol && board[c] === symbol) {
+                        cells[a].classList.add('winner');
+                        cells[b].classList.add('winner');
+                        cells[c].classList.add('winner');
+                        return true;
+                    }
+                }
+                
+                return false;
             }
-        }
-        
-        // Make a move
-        function makeMove(cellIndex, player) {
-            gameBoard[cellIndex] = player;
-            cells[cellIndex].textContent = player;
-            cells[cellIndex].classList.add(player.toLowerCase());
             
-            // Save move to history
-            saveMove(cellIndex, player);
+            function checkDraw() {
+                return board.every(cell => cell !== '');
+            }
             
-            // Check for win or draw
-            if (checkWin(player)) {
+            function endGame(isDraw) {
                 gameActive = false;
-                if (player === currentPlayer) {
-                    playerScore++;
-                    playerScoreElement.textContent = playerScore;
-                    gameStatus.textContent = 'You win! 🎉';
+                
+                if (isDraw) {
+                    statusDisplay.textContent = "It's a draw!";
+                    gameHistory.push({
+                        result: 'draw',
+                        moves: [...moveHistory]
+                    });
                 } else {
-                    aiScore++;
-                    aiScoreElement.textContent = aiScore;
-                    gameStatus.textContent = 'AI wins! 🤖';
-                }
-            } else if (checkDraw()) {
-                gameActive = false;
-                gameStatus.textContent = 'It\'s a draw! 🤝';
-            } else {
-                // Switch player
-                gameStatus.textContent = player === currentPlayer ? 'AI is thinking... 🤔' : 'Your turn! 🎮';
-            }
-        }
-        
-        // AI move based on difficulty
-        function makeAIMove() {
-            if (!gameActive) return;
-            
-            let cellIndex;
-            
-            switch (difficulty) {
-                case 'easy':
-                    cellIndex = getRandomMove();
-                    break;
-                case 'medium':
-                    // 50% chance of making a smart move, 50% random
-                    cellIndex = Math.random() < 0.5 ? getSmartMove() : getRandomMove();
-                    break;
-                case 'hard':
-                    cellIndex = getSmartMove();
-                    break;
-                default:
-                    cellIndex = getRandomMove();
-            }
-            
-            makeMove(cellIndex, aiPlayer);
-        }
-        
-        // Get a random valid move
-        function getRandomMove() {
-            const availableMoves = gameBoard.map((cell, index) => cell === '' ? index : -1).filter(index => index !== -1);
-            
-            if (availableMoves.length === 0) return null;
-            
-            const randomIndex = Math.floor(Math.random() * availableMoves.length);
-            return availableMoves[randomIndex];
-        }
-        
-        // Get a smart move
-        function getSmartMove() {
-            // Check if AI can win
-            for (let i = 0; i < gameBoard.length; i++) {
-                if (gameBoard[i] === '') {
-                    gameBoard[i] = aiPlayer;
-                    if (checkWin(aiPlayer)) {
-                        gameBoard[i] = '';
-                        return i;
+                    if (currentPlayer === playerSymbol) {
+                        statusDisplay.textContent = "You won!";
+                        playerScore++;
+                        playerScoreDisplay.textContent = playerScore;
+                        gameHistory.push({
+                            result: 'player win',
+                            moves: [...moveHistory]
+                        });
+                    } else {
+                        statusDisplay.textContent = "AI won!";
+                        aiScore++;
+                        aiScoreDisplay.textContent = aiScore;
+                        gameHistory.push({
+                            result: 'ai win',
+                            moves: [...moveHistory]
+                        });
                     }
-                    gameBoard[i] = '';
                 }
             }
             
-            // Check if player can win and block
-            for (let i = 0; i < gameBoard.length; i++) {
-                if (gameBoard[i] === '') {
-                    gameBoard[i] = currentPlayer;
-                    if (checkWin(currentPlayer)) {
-                        gameBoard[i] = '';
-                        return i;
-                    }
-                    gameBoard[i] = '';
+            function undoMove() {
+                if (moveHistory.length < 2 || !gameActive) {
+                    return;
                 }
-            }
-            
-            // Take center if available
-            if (gameBoard[4] === '') {
-                return 4;
-            }
-            
-            // Take a corner if available
-            const corners = [0, 2, 6, 8];
-            const availableCorners = corners.filter(corner => gameBoard[corner] === '');
-            if (availableCorners.length > 0) {
-                return availableCorners[Math.floor(Math.random() * availableCorners.length)];
-            }
-            
-            // Take any available edge
-            const edges = [1, 3, 5, 7];
-            const availableEdges = edges.filter(edge => gameBoard[edge] === '');
-            if (availableEdges.length > 0) {
-                return availableEdges[Math.floor(Math.random() * availableEdges.length)];
-            }
-            
-            // Fallback to random move
-            return getRandomMove();
-        }
-        
-        // Check for win
-        function checkWin(player) {
-            return winningCombinations.some(combination => {
-                return combination.every(index => {
-                    return gameBoard[index] === player;
-                });
-            });
-        }
-        
-        // Check for draw
-        function checkDraw() {
-            return gameBoard.every(cell => cell !== '');
-        }
-        
-        // Reset round
-        function resetRound() {
-            gameBoard = ['', '', '', '', '', '', '', '', ''];
-            gameActive = true;
-            gameHistory = [];
-            currentStep = -1;
-            updateGameHistory();
-            
-            // Clear the board
-            cells.forEach(cell => {
-                cell.textContent = '';
-                cell.classList.remove('x', 'o');
-            });
-            
-            gameStatus.textContent = 'Your turn! 🎮';
-            undoBtn.disabled = true;
-            
-            // If AI goes first (player is O)
-            if (currentPlayer === 'O') {
-                setTimeout(() => {
-                    makeAIMove();
-                }, 500);
-            }
-        }
-        
-        // Reset scores
-        function resetScores() {
-            playerScore = 0;
-            aiScore = 0;
-            playerScoreElement.textContent = playerScore;
-            aiScoreElement.textContent = aiScore;
-            
-            resetRound();
-        }
-        
-        // Save move to history
-        function saveMove(cellIndex, player) {
-            // If we're not at the end of the history, truncate it
-            if (currentStep < gameHistory.length - 1) {
-                gameHistory = gameHistory.slice(0, currentStep + 1);
-            }
-            
-            // Create a deep copy of the current board
-            const boardCopy = [...gameBoard];
-            
-            // Add the move to history
-            gameHistory.push({
-                board: boardCopy,
-                lastMove: {
-                    cellIndex: parseInt(cellIndex),
-                    player: player
-                }
-            });
-            
-            currentStep = gameHistory.length - 1;
-            
-            // Update UI
-            updateGameHistory();
-            undoBtn.disabled = false;
-        }
-        
-        // Undo the last move
-        function undoMove() {
-            if (currentStep <= 0) {
-                resetRound();
-                return;
-            }
-            
-            // Go back two steps (player and AI move)
-            currentStep = Math.max(currentStep - 2, 0);
-            const historyItem = gameHistory[currentStep];
-            
-            if (historyItem) {
-                // Restore the board state
-                gameBoard = [...historyItem.board];
                 
-                // Update the UI
-                cells.forEach((cell, index) => {
-                    cell.textContent = gameBoard[index];
-                    cell.classList.remove('x', 'o');
-                    if (gameBoard[index] === 'X') {
-                        cell.classList.add('x');
-                    } else if (gameBoard[index] === 'O') {
-                        cell.classList.add('o');
-                    }
-                });
+                // Undo both AI and player moves
+                const aiMove = moveHistory.pop();
+                const playerMove = moveHistory.pop();
                 
-                // Restore game state
+                // Reset the cells
+                cells[aiMove.index].textContent = '';
+                cells[aiMove.index].classList.remove('x', 'o');
+                board[aiMove.index] = '';
+                
+                cells[playerMove.index].textContent = '';
+                cells[playerMove.index].classList.remove('x', 'o');
+                board[playerMove.index] = '';
+                
+                // Update history display
+                updateHistory('Moves undone');
+                
+                currentPlayer = playerSymbol;
+                updateStatusMessage();
+            }
+            
+            function resetRound() {
+                board = ['', '', '', '', '', '', '', '', ''];
                 gameActive = true;
-                gameStatus.textContent = 'Your turn! 🎮';
+                moveHistory = [];
                 
-                // Update history UI
-                updateGameHistory();
-            }
-        }
-        
-        // Update game history UI
-        function updateGameHistory() {
-            moveHistoryElement.innerHTML = '';
-            
-            if (gameHistory.length === 0) {
-                moveHistoryElement.innerHTML = '<p>No moves yet</p>';
-                return;
-            }
-            
-            gameHistory.forEach((historyItem, index) => {
-                const moveElement = document.createElement('div');
-                moveElement.classList.add('history-move');
-                if (index === currentStep) {
-                    moveElement.classList.add('active');
-                }
-                
-                const moveNumber = Math.floor(index / 2) + 1;
-                const isPlayerMove = index % 2 === 0;
-                
-                if (historyItem.lastMove) {
-                    moveElement.innerHTML = `
-                        <span>${moveNumber}. ${isPlayerMove ? 'Player' : 'AI'} placed 
-                        ${historyItem.lastMove.player} at position ${historyItem.lastMove.cellIndex + 1}</span>
-                    `;
-                }
-                
-                moveElement.addEventListener('click', () => {
-                    goToHistoryStep(index);
+                cells.forEach(cell => {
+                    cell.textContent = '';
+                    cell.classList.remove('x', 'o', 'winner');
                 });
                 
-                moveHistoryElement.appendChild(moveElement);
-            });
-        }
-        
-        // Go to a specific step in the history
-        function goToHistoryStep(step) {
-            if (step < 0 || step >= gameHistory.length) return;
-            
-            currentStep = step;
-            const historyItem = gameHistory[step];
-            
-            // Restore the board state
-            gameBoard = [...historyItem.board];
-            
-            // Update the UI
-            cells.forEach((cell, index) => {
-                cell.textContent = gameBoard[index];
-                cell.classList.remove('x', 'o');
-                if (gameBoard[index] === 'X') {
-                    cell.classList.add('x');
-                } else if (gameBoard[index] === 'O') {
-                    cell.classList.add('o');
+                currentPlayer = 'X';
+                updateStatusMessage();
+                
+                // If player is O, AI goes first
+                if (playerSymbol === 'O') {
+                    setTimeout(makeAiMove, 500);
                 }
-            });
+                
+                updateHistory('Round reset');
+            }
             
-            // Update history UI
-            updateGameHistory();
+            function resetScores() {
+                playerScore = 0;
+                aiScore = 0;
+                playerScoreDisplay.textContent = '0';
+                aiScoreDisplay.textContent = '0';
+                gameHistory = [];
+                updateHistory('Scores reset');
+            }
             
-            // If we're at the latest step, resume the game
-            if (step === gameHistory.length - 1) {
-                // Check if the game is over
-                if (checkWin('X') || checkWin('O') || checkDraw()) {
-                    gameActive = false;
-                } else {
-                    gameActive = true;
-                    gameStatus.textContent = (gameHistory.length % 2 === 1) ? 'Your turn! 🎮' : 'AI is thinking... 🤔';
+            function updateStatusMessage() {
+                if (gameActive) {
+                    if (currentPlayer === playerSymbol) {
+                        statusDisplay.textContent = "Your turn!";
+                    } else {
+                        statusDisplay.textContent = "AI is thinking...";
+                    }
                 }
-            } else {
-                // We're viewing history, game is paused
-                gameActive = false;
-                gameStatus.textContent = 'Viewing history... Use "Reset Round" to continue playing.';
             }
-        }
-        
-        // Toggle history display
-        function toggleHistory() {
-            if (historyContainer.style.display === 'none' || !historyContainer.style.display) {
-                historyContainer.style.display = 'block';
-                showHistoryBtn.textContent = 'Hide History';
-                updateGameHistory();
-            } else {
-                historyContainer.style.display = 'none';
-                showHistoryBtn.textContent = 'Show History';
+            
+            function updateHistory(message) {
+                const historyItem = document.createElement('div');
+                historyItem.classList.add('history-move');
+                historyItem.textContent = message;
+                historyList.prepend(historyItem);
+                
+                // Limit history items
+                if (historyList.children.length > 10) {
+                    historyList.removeChild(historyList.lastChild);
+                }
             }
-        }
-        
-        // Initialize the game
-        initGame();
+            
+            function toggleHistory() {
+                historyContainer.style.display = historyContainer.style.display === 'block' ? 'none' : 'block';
+                document.getElementById('history-btn').textContent = historyContainer.style.display === 'block' ? 'Hide History' : 'Show History';
+            }
+            
+            function toggleSettings() {
+                const isVisible = settingsPanel.style.display === 'block';
+                settingsPanel.style.display = isVisible ? 'none' : 'block';
+                overlay.style.display = isVisible ? 'none' : 'block';
+            }
+        });
     </script>
 </body>
 </html>
