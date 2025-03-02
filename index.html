@@ -563,20 +563,24 @@
             <span class="close">&times;</span>
             <h2>Game Settings</h2>
             
-            <div class="settings-group">
-                <h3>Game Theme</h3>
-                <div class="settings-options">
-                    <button class="theme-btn" data-theme="light">
-                        <span class="theme-preview light-preview"></span>Light
-                    </button>
-                    <button class="theme-btn" data-theme="dark">
-                        <span class="theme-preview dark-preview"></span>Dark
-                    </button>
-                    <button class="theme-btn" data-theme="colorful">
-                        <span class="theme-preview colorful-preview"></span>Colorful
-                    </button>
-                </div>
-            </div>
+            <!-- Bagian Pengaturan Game - Pilihan Tema -->
+<div class="settings-section">
+    <h2>Game Theme</h2>
+    <div class="theme-options">
+        <div class="theme-option active" onclick="setTheme('light')">Light</div>
+        <div class="theme-option" onclick="setTheme('dark')">Dark</div>
+        <div class="theme-option" onclick="setTheme('minimalist')">Minimalist</div>
+        <div class="theme-option" onclick="setTheme('ocean')">Ocean</div>
+        <div class="theme-option" onclick="setTheme('forest')">Forest</div>
+        <div class="theme-option" onclick="setTheme('sunset')">Sunset</div>
+        <div class="theme-option" onclick="setTheme('monochrome')">Monochrome</div>
+        <div class="theme-option" onclick="setTheme('retro')">Retro</div>
+        <div class="theme-option" onclick="setTheme('neon')">Neon</div>
+        <div class="theme-option" onclick="setTheme('pastel')">Pastel</div>
+        <div class="theme-option" onclick="setTheme('autumn')">Autumn</div>
+        <div class="theme-option" onclick="setTheme('space')">Space</div>
+    </div>
+</div>
             
             <div class="settings-group">
                 <h3>AI Difficulty</h3>
