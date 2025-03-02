@@ -1,40 +1,47 @@
-# 🎮 Tic-Tac-Toe with Unbeatable AI 🤖
+# Tic Tac Toe Game
 
-[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge&logo=github)](https://yourusername.github.io/tic-tac-toe-ai/)
+## Description
+Tic Tac Toe Game is a classic game implemented using HTML, CSS, and JavaScript. This game allows you to play against an AI with various difficulty levels, theme options, and additional features such as undo move, round reset, and game history tracking.
 
-A modern implementation of the classic Tic-Tac-Toe game featuring an unbeatable AI opponent powered by the Minimax algorithm, complete with score tracking and immersive visual effects.
+## Main Features
+- **Responsive Design:** The game adjusts to different screen sizes, making it comfortable to play on both desktop and mobile devices.
+- **Multiple Themes:** Choose from a variety of themes via the settings panel, including:
+  - Light (default)
+  - Dark
+  - Minimalist
+  - Ocean
+  - Forest
+  - Sunset
+  - Monochrome
+  - Retro
+  - Neon
+  - Pastel
+  - Autumn
+  - Space
+  - Colorful
+  - Cyberpunk
+  - Coffee
+  - Candy
+  - Beach
+- **AI Difficulty Levels:** 
+  - **Easy:** The AI makes moves randomly with minimal strategy.
+  - **Medium:** The AI uses a combination of basic strategy and random moves.
+  - **Hard:** The AI employs a Minimax algorithm (with a slight random element) to be nearly unbeatable.
+- **Game Controls:**
+  - **Undo Move:** Revert the last two moves (both the player's and the AI's).
+  - **Reset Round:** Clear the board and start a new round.
+  - **Reset Scores:** Reset the scores for both the player and the AI.
+  - **Game History:** View a log of moves made during the game.
+- **Settings Panel:** Customize the game by choosing your preferred theme, AI difficulty level, and player symbol (X or O).
 
-![Game Screenshot](/screenshot.jpeg) <!-- Add the actual screenshot later -->
-
-## ✨ Features
-
-- 🤖 **Smart AI** powered by the unbeatable Minimax algorithm  
-- 🏆 **Score System** with local storage support  
-- 🎉 **Confetti Effects** for celebratory wins  
-- 🎨 **Modern Design** with animated gradients and hover effects  
-- 📱 **Responsive Layout** for all screen sizes  
-- ⏳ **AI Thinking Simulation** with a realistic delay  
-- 🔄 **Reset Game** & **New Game** options with a single click  
-- 🌈 **Interactive Visual Feedback** for every action  
-
-## 🛠 Technologies
-
-- ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
-- ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
-- ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
-- [Canvas Confetti](https://www.npmjs.com/package/canvas-confetti) - For celebration effects  
-- [Google Fonts](https://fonts.google.com/) - Orbitron & Roboto  
-
-## 🕹 How to Play
-
-1. Click an empty cell to place an **X**.  
-2. The AI will respond with an **O** after "thinking."  
-3. Try to align three marks in a row (horizontal, vertical, or diagonal).  
-4. If it’s a draw, click "Reset Game" to start over.  
-5. Use "New Game" to reset the score to 0.  
-
-## 🚀 Installation
-
-1. Clone the repository:  
-   ```bash
-   git clone https://github.com/paradoxically/tic-tac-toe.git
+## How to Play
+1. **Launch the Game:**  
+   Open the `index.html` file in your preferred web browser.
+2. **Start Playing:**  
+   On the main screen, you will see the Tic Tac Toe board, score display, and status message.
+3. **Make a Move:**  
+   Click on any empty cell to place your symbol. After your move, the AI will respond after a brief delay.
+4. **Use the Controls:**  
+   Use the available buttons to change game settings, undo moves, reset the round, or reset scores.
+5. **Customize Settings:**  
+   Click the *Game Settings* button to open the settings panel and select your preferred theme, AI difficulty, or player symbol.
