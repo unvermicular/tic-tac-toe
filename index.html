@@ -8,97 +8,101 @@
 </head>
 <body data-theme="light">
     <header>
-        <h1>Tic Tac Toe</h1>
+        <h1 id="game-title">Tic Tac Toe</h1>
+        <p class="tagline">Challenge the AI, track your progress, and customize your play style.</p>
     </header>
 
-    <div class="game-container">
-        <div class="score-container">
-            <div class="score-box">
-                <div>Player:</div>
-                <div id="player-score">0</div>
+    <main class="game-container" aria-labelledby="game-title">
+        <div class="score-container" role="status" aria-live="polite">
+            <div class="score-box" aria-label="Player score">
+                <span class="label">Player</span>
+                <span class="value" id="player-score">0</span>
             </div>
-            <div class="score-box">
-                <div>AI:</div>
-                <div id="ai-score">0</div>
+            <div class="score-box" aria-label="AI score">
+                <span class="label">AI</span>
+                <span class="value" id="ai-score">0</span>
             </div>
         </div>
 
-        <div class="status-message" id="status">Your turn!</div>
+        <div class="status-message" id="status" role="status" aria-live="polite">Your turn!</div>
+        <div class="turn-indicator" id="turn-indicator" aria-live="polite"></div>
 
-        <div class="board" id="board">
-            <div class="cell" data-index="0"></div>
-            <div class="cell" data-index="1"></div>
-            <div class="cell" data-index="2"></div>
-            <div class="cell" data-index="3"></div>
-            <div class="cell" data-index="4"></div>
-            <div class="cell" data-index="5"></div>
-            <div class="cell" data-index="6"></div>
-            <div class="cell" data-index="7"></div>
-            <div class="cell" data-index="8"></div>
+        <div class="board" id="board" role="grid" aria-label="Tic Tac Toe board">
+            <div class="cell" data-index="0" role="gridcell" aria-label="Empty cell 1"></div>
+            <div class="cell" data-index="1" role="gridcell" aria-label="Empty cell 2"></div>
+            <div class="cell" data-index="2" role="gridcell" aria-label="Empty cell 3"></div>
+            <div class="cell" data-index="3" role="gridcell" aria-label="Empty cell 4"></div>
+            <div class="cell" data-index="4" role="gridcell" aria-label="Empty cell 5"></div>
+            <div class="cell" data-index="5" role="gridcell" aria-label="Empty cell 6"></div>
+            <div class="cell" data-index="6" role="gridcell" aria-label="Empty cell 7"></div>
+            <div class="cell" data-index="7" role="gridcell" aria-label="Empty cell 8"></div>
+            <div class="cell" data-index="8" role="gridcell" aria-label="Empty cell 9"></div>
         </div>
 
-        <div class="controls">
-            <button id="settings-btn">Game Settings</button>
-            <button id="undo-btn">Undo Move</button>
-            <button id="reset-round-btn">Reset Round</button>
-            <button id="reset-scores-btn">Reset Scores</button>
-            <button id="history-btn">Show History</button>
+        <div class="controls" role="group" aria-label="Game controls">
+            <button type="button" id="settings-btn" aria-haspopup="dialog" aria-expanded="false">Game Settings</button>
+            <button type="button" id="undo-btn">Undo Move</button>
+            <button type="button" id="reset-round-btn">Reset Round</button>
+            <button type="button" id="reset-scores-btn">Reset Scores</button>
+            <button type="button" id="history-btn" aria-expanded="false">Show History</button>
         </div>
 
-        <div class="history-container" id="history-container">
+        <div class="history-container" id="history-container" aria-hidden="true">
             <h3>Game History</h3>
-            <div id="history-list"></div>
+            <div id="history-list" role="log" aria-live="polite"></div>
         </div>
-    </div>
+    </main>
 
-    <div class="overlay" id="overlay"></div>
+    <div class="overlay" id="overlay" aria-hidden="true"></div>
 
-    <div class="settings-panel" id="settings-panel">
+    <div class="settings-panel" id="settings-panel" tabindex="-1" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="settings-title">
         <div class="settings-header">
-            <h3>Game Settings</h3>
-            <button class="close-settings" id="close-settings">×</button>
+            <h3 id="settings-title">Game Settings</h3>
+            <button type="button" class="close-settings" id="close-settings" aria-label="Close settings">×</button>
         </div>
 
         <div class="settings-group">
             <h3>Game Theme</h3>
-            <div class="theme-options">
-                <button class="theme-btn active" data-theme="light">Light</button>
-                <button class="theme-btn" data-theme="dark">Dark</button>
-                <button class="theme-btn" data-theme="minimalist">Minimalist</button>
-                <button class="theme-btn" data-theme="ocean">Ocean</button>
-                <button class="theme-btn" data-theme="forest">Forest</button>
-                <button class="theme-btn" data-theme="sunset">Sunset</button>
-                <button class="theme-btn" data-theme="monochrome">Monochrome</button>
-                <button class="theme-btn" data-theme="retro">Retro</button>
-                <button class="theme-btn" data-theme="neon">Neon</button>
-                <button class="theme-btn" data-theme="pastel">Pastel</button>
-                <button class="theme-btn" data-theme="autumn">Autumn</button>
-                <button class="theme-btn" data-theme="space">Space</button>
-                <button class="theme-btn" data-theme="colorful">Colorful</button>
-                <button class="theme-btn" data-theme="cyberpunk">Cyberpunk</button>
-                <button class="theme-btn" data-theme="coffee">Coffee</button>
-                <button class="theme-btn" data-theme="candy">Candy</button>
-                <button class="theme-btn" data-theme="beach">Beach</button>
+            <div class="theme-options" role="group" aria-label="Theme selection">
+                <button type="button" class="theme-btn active" data-theme="light">Light</button>
+                <button type="button" class="theme-btn" data-theme="dark">Dark</button>
+                <button type="button" class="theme-btn" data-theme="minimalist">Minimalist</button>
+                <button type="button" class="theme-btn" data-theme="ocean">Ocean</button>
+                <button type="button" class="theme-btn" data-theme="forest">Forest</button>
+                <button type="button" class="theme-btn" data-theme="sunset">Sunset</button>
+                <button type="button" class="theme-btn" data-theme="monochrome">Monochrome</button>
+                <button type="button" class="theme-btn" data-theme="retro">Retro</button>
+                <button type="button" class="theme-btn" data-theme="neon">Neon</button>
+                <button type="button" class="theme-btn" data-theme="pastel">Pastel</button>
+                <button type="button" class="theme-btn" data-theme="autumn">Autumn</button>
+                <button type="button" class="theme-btn" data-theme="space">Space</button>
+                <button type="button" class="theme-btn" data-theme="colorful">Colorful</button>
+                <button type="button" class="theme-btn" data-theme="cyberpunk">Cyberpunk</button>
+                <button type="button" class="theme-btn" data-theme="coffee">Coffee</button>
+                <button type="button" class="theme-btn" data-theme="candy">Candy</button>
+                <button type="button" class="theme-btn" data-theme="beach">Beach</button>
             </div>
         </div>
 
         <div class="settings-group">
             <h3>AI Difficulty</h3>
-            <div class="difficulty-options">
-                <button class="difficulty-btn active" data-difficulty="easy">Easy</button>
-                <button class="difficulty-btn" data-difficulty="medium">Medium</button>
-                <button class="difficulty-btn" data-difficulty="hard">Hard</button>
+            <div class="difficulty-options" role="group" aria-label="AI difficulty">
+                <button type="button" class="difficulty-btn active" data-difficulty="easy">Easy</button>
+                <button type="button" class="difficulty-btn" data-difficulty="medium">Medium</button>
+                <button type="button" class="difficulty-btn" data-difficulty="hard">Hard</button>
             </div>
         </div>
 
         <div class="settings-group">
             <h3>Player Symbol</h3>
-            <div class="symbol-options">
-                <button class="symbol-btn active" data-symbol="X">Play as X</button>
-                <button class="symbol-btn" data-symbol="O">Play as O</button>
+            <div class="symbol-options" role="group" aria-label="Choose player symbol">
+                <button type="button" class="symbol-btn active" data-symbol="X">Play as X</button>
+                <button type="button" class="symbol-btn" data-symbol="O">Play as O</button>
             </div>
         </div>
     </div>
+
+    <footer class="footer-note">Built for fast play and endless customization.</footer>
 
     <script src="script.js"></script>
 </body>

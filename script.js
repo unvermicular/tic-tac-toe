@@ -1,28 +1,56 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Game state
-  let board = ["", "", "", "", "", "", "", "", ""];
+  const storageKeys = {
+    theme: "ttt-theme",
+    difficulty: "ttt-difficulty",
+    symbol: "ttt-symbol",
+  };
+
+  const safeStorage = {
+    get(key, fallback) {
+      try {
+        const stored = localStorage.getItem(key);
+        return stored !== null ? stored : fallback;
+      } catch (error) {
+        return fallback;
+      }
+    },
+    set(key, value) {
+      try {
+        localStorage.setItem(key, value);
+      } catch (error) {
+        // Ignore storage errors (private browsing, etc.)
+      }
+    },
+  };
+
+  let board = Array(9).fill("");
   let currentPlayer = "X";
   let gameActive = true;
-  let playerSymbol = "X";
-  let aiSymbol = "O";
+  let playerSymbol = safeStorage.get(storageKeys.symbol, "X");
+  let aiSymbol = playerSymbol === "X" ? "O" : "X";
   let playerScore = 0;
   let aiScore = 0;
   let moveHistory = [];
   let gameHistory = [];
-  let aiDifficulty = "easy";
+  let aiDifficulty = safeStorage.get(storageKeys.difficulty, "easy");
 
-  // DOM elements
-  const boardElement = document.getElementById("board");
   const cells = document.querySelectorAll(".cell");
   const statusDisplay = document.getElementById("status");
+  const turnIndicator = document.getElementById("turn-indicator");
   const playerScoreDisplay = document.getElementById("player-score");
   const aiScoreDisplay = document.getElementById("ai-score");
+  const scoreBoxes = document.querySelectorAll(".score-box");
   const historyContainer = document.getElementById("history-container");
   const historyList = document.getElementById("history-list");
+  const historyButton = document.getElementById("history-btn");
   const settingsPanel = document.getElementById("settings-panel");
+  const settingsButton = document.getElementById("settings-btn");
   const overlay = document.getElementById("overlay");
 
-  // Winning combinations
+  const themeButtons = document.querySelectorAll(".theme-btn");
+  const difficultyButtons = document.querySelectorAll(".difficulty-btn");
+  const symbolButtons = document.querySelectorAll(".symbol-btn");
+
   const winningConditions = [
     [0, 1, 2],
     [3, 4, 5],
@@ -34,88 +62,70 @@ document.addEventListener("DOMContentLoaded", () => {
     [2, 4, 6], // Diagonals
   ];
 
-  // Initialize game
   initGame();
 
   function initGame() {
     cells.forEach((cell) => {
+      const index = Number(cell.getAttribute("data-index"));
       cell.addEventListener("click", () => handleCellClick(cell));
       cell.textContent = "";
       cell.classList.remove("x", "o", "winner");
+      cell.setAttribute("aria-label", `Empty cell ${index + 1}`);
     });
 
     document.getElementById("undo-btn").addEventListener("click", undoMove);
     document
       .getElementById("reset-round-btn")
-      .addEventListener("click", resetRound);
+      .addEventListener("click", () => resetRound());
     document
       .getElementById("reset-scores-btn")
       .addEventListener("click", resetScores);
-    document
-      .getElementById("history-btn")
-      .addEventListener("click", toggleHistory);
-    document
-      .getElementById("settings-btn")
-      .addEventListener("click", toggleSettings);
+    historyButton.addEventListener("click", toggleHistory);
+    settingsButton.addEventListener("click", () => toggleSettings());
     document
       .getElementById("close-settings")
-      .addEventListener("click", toggleSettings);
-    overlay.addEventListener("click", toggleSettings);
+      .addEventListener("click", () => toggleSettings(false));
+    overlay.addEventListener("click", () => toggleSettings(false));
+    document.addEventListener("keydown", handleGlobalKeyDown);
 
-    // Theme buttons
-    document.querySelectorAll(".theme-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        document
-          .querySelectorAll(".theme-btn")
-          .forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-        document.body.setAttribute(
-          "data-theme",
-          btn.getAttribute("data-theme")
-        );
-      });
+    themeButtons.forEach((btn) => {
+      btn.addEventListener("click", () => applyTheme(btn.getAttribute("data-theme")));
     });
 
-    // Difficulty buttons
-    document.querySelectorAll(".difficulty-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        document
-          .querySelectorAll(".difficulty-btn")
-          .forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-        aiDifficulty = btn.getAttribute("data-difficulty");
-      });
+    difficultyButtons.forEach((btn) => {
+      btn.addEventListener("click", () =>
+        applyDifficulty(btn.getAttribute("data-difficulty"))
+      );
     });
 
-    // Symbol buttons
-    document.querySelectorAll(".symbol-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        document
-          .querySelectorAll(".symbol-btn")
-          .forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-
-        const newSymbol = btn.getAttribute("data-symbol");
-        if (newSymbol !== playerSymbol) {
-          playerSymbol = newSymbol;
-          aiSymbol = playerSymbol === "X" ? "O" : "X";
-          resetRound();
-
-          // If AI goes first (player is O)
-          if (playerSymbol === "O") {
-            setTimeout(makeAiMove, 500);
-          }
-        }
-      });
+    symbolButtons.forEach((btn) => {
+      btn.addEventListener("click", () => applySymbol(btn.getAttribute("data-symbol")));
     });
 
-    updateStatusMessage();
+    // Apply stored preferences
+    applyTheme(safeStorage.get(storageKeys.theme, "light"), { skipSave: true });
+    applyDifficulty(aiDifficulty, { skipSave: true });
+    applySymbol(playerSymbol, { skipSave: true, skipReset: true });
+
+    resetRound(true);
+  }
+
+  function setActiveButton(buttons, value, dataKey) {
+    buttons.forEach((btn) => {
+      const isActive = btn.getAttribute(`data-${dataKey}`) === value;
+      btn.classList.toggle("active", isActive);
+    });
   }
 
   function handleCellClick(cell) {
-    const index = cell.getAttribute("data-index");
+    const index = Number(cell.getAttribute("data-index"));
 
-    if (board[index] !== "" || !gameActive || currentPlayer !== playerSymbol) {
+    if (
+      Number.isNaN(index) ||
+      board[index] !== "" ||
+      !gameActive ||
+      currentPlayer !== playerSymbol
+    ) {
       return;
     }
 
@@ -127,17 +137,26 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function makeMove(index, symbol) {
+    if (!Number.isInteger(index) || index < 0 || index >= board.length) {
+      return;
+    }
+
     board[index] = symbol;
     moveHistory.push({
-      index: index,
-      symbol: symbol,
+      index,
+      symbol,
     });
 
     const cell = cells[index];
+    if (!cell) {
+      return;
+    }
+
     cell.textContent = symbol;
     cell.classList.add(symbol.toLowerCase());
+    cell.setAttribute("aria-label", `${symbol} placed on cell ${index + 1}`);
 
-    updateHistory(`${symbol} played at position ${parseInt(index) + 1}`);
+    updateHistory(`${symbol} played at position ${index + 1}`);
 
     if (checkWin(symbol)) {
       endGame(false);
@@ -154,27 +173,25 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    let moveIndex;
+    let moveIndex = null;
 
     switch (aiDifficulty) {
       case "hard":
         moveIndex = getBestMove();
         break;
       case "medium":
-        if (Math.random() < 0.7) {
-          moveIndex = getSmartMove();
-        } else {
-          moveIndex = getRandomMove();
-        }
+        moveIndex = Math.random() < 0.7 ? getSmartMove() : getRandomMove();
         break;
       case "easy":
       default:
-        if (Math.random() < 0.3) {
-          moveIndex = getSmartMove();
-        } else {
-          moveIndex = getRandomMove();
-        }
+        moveIndex = Math.random() < 0.3 ? getSmartMove() : getRandomMove();
         break;
+    }
+
+    if (moveIndex === null || moveIndex === undefined) {
+      // No valid moves available
+      endGame(true);
+      return;
     }
 
     makeMove(moveIndex, aiSymbol);
@@ -184,11 +201,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const availableMoves = board
       .map((cell, index) => (cell === "" ? index : null))
       .filter((index) => index !== null);
+
+    if (availableMoves.length === 0) {
+      return null;
+    }
+
     return availableMoves[Math.floor(Math.random() * availableMoves.length)];
   }
 
   function getSmartMove() {
-    // First try to win
     for (let i = 0; i < winningConditions.length; i++) {
       const [a, b, c] = winningConditions[i];
       if (board[a] === aiSymbol && board[b] === aiSymbol && board[c] === "") {
@@ -202,51 +223,33 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    // Then try to block
     for (let i = 0; i < winningConditions.length; i++) {
       const [a, b, c] = winningConditions[i];
-      if (
-        board[a] === playerSymbol &&
-        board[b] === playerSymbol &&
-        board[c] === ""
-      ) {
+      if (board[a] === playerSymbol && board[b] === playerSymbol && board[c] === "") {
         return c;
       }
-      if (
-        board[a] === playerSymbol &&
-        board[c] === playerSymbol &&
-        board[b] === ""
-      ) {
+      if (board[a] === playerSymbol && board[c] === playerSymbol && board[b] === "") {
         return b;
       }
-      if (
-        board[b] === playerSymbol &&
-        board[c] === playerSymbol &&
-        board[a] === ""
-      ) {
+      if (board[b] === playerSymbol && board[c] === playerSymbol && board[a] === "") {
         return a;
       }
     }
 
-    // Take center if available
     if (board[4] === "") {
       return 4;
     }
 
-    // Take a random corner
-    const corners = [0, 2, 6, 8].filter((index) => board[index] === "");
+    const corners = [0, 2, 6, 8].filter((cornerIndex) => board[cornerIndex] === "");
     if (corners.length > 0) {
       return corners[Math.floor(Math.random() * corners.length)];
     }
 
-    // Take any available move
     return getRandomMove();
   }
 
   function getBestMove() {
-    // Minimax implementation for unbeatable AI
     function minimax(newBoard, depth, isMaximizing) {
-      // Check for terminal states
       const winner = checkWinningCondition(newBoard);
       if (winner === aiSymbol) return 10 - depth;
       if (winner === playerSymbol) return depth - 10;
@@ -263,39 +266,37 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         }
         return bestScore;
-      } else {
-        let bestScore = Infinity;
-        for (let i = 0; i < 9; i++) {
-          if (newBoard[i] === "") {
-            newBoard[i] = playerSymbol;
-            const score = minimax(newBoard, depth + 1, true);
-            newBoard[i] = "";
-            bestScore = Math.min(score, bestScore);
-          }
-        }
-        return bestScore;
       }
+
+      let bestScore = Infinity;
+      for (let i = 0; i < 9; i++) {
+        if (newBoard[i] === "") {
+          newBoard[i] = playerSymbol;
+          const score = minimax(newBoard, depth + 1, true);
+          newBoard[i] = "";
+          bestScore = Math.min(score, bestScore);
+        }
+      }
+      return bestScore;
     }
 
-    function checkWinningCondition(board) {
+    function checkWinningCondition(testBoard) {
       for (let i = 0; i < winningConditions.length; i++) {
         const [a, b, c] = winningConditions[i];
-        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-          return board[a];
+        if (testBoard[a] && testBoard[a] === testBoard[b] && testBoard[a] === testBoard[c]) {
+          return testBoard[a];
         }
       }
       return null;
     }
 
-    function checkBoardFull(board) {
-      return board.every((cell) => cell !== "");
+    function checkBoardFull(testBoard) {
+      return testBoard.every((cell) => cell !== "");
     }
 
-    // Actual minimax move calculation
     let bestScore = -Infinity;
-    let bestMove;
+    let bestMove = null;
 
-    // Add randomness to make the AI beatable occasionally on hard difficulty
     if (Math.random() < 0.2) {
       return getRandomMove();
     }
@@ -312,13 +313,12 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    return bestMove;
+    return bestMove !== null ? bestMove : getRandomMove();
   }
 
   function checkWin(symbol) {
     for (let i = 0; i < winningConditions.length; i++) {
       const [a, b, c] = winningConditions[i];
-
       if (board[a] === symbol && board[b] === symbol && board[c] === symbol) {
         cells[a].classList.add("winner");
         cells[b].classList.add("winner");
@@ -343,25 +343,26 @@ document.addEventListener("DOMContentLoaded", () => {
         result: "draw",
         moves: [...moveHistory],
       });
+    } else if (currentPlayer === playerSymbol) {
+      statusDisplay.textContent = "You won!";
+      playerScore++;
+      playerScoreDisplay.textContent = playerScore;
+      gameHistory.push({
+        result: "player win",
+        moves: [...moveHistory],
+      });
     } else {
-      if (currentPlayer === playerSymbol) {
-        statusDisplay.textContent = "You won!";
-        playerScore++;
-        playerScoreDisplay.textContent = playerScore;
-        gameHistory.push({
-          result: "player win",
-          moves: [...moveHistory],
-        });
-      } else {
-        statusDisplay.textContent = "AI won!";
-        aiScore++;
-        aiScoreDisplay.textContent = aiScore;
-        gameHistory.push({
-          result: "ai win",
-          moves: [...moveHistory],
-        });
-      }
+      statusDisplay.textContent = "AI won!";
+      aiScore++;
+      aiScoreDisplay.textContent = aiScore;
+      gameHistory.push({
+        result: "ai win",
+        moves: [...moveHistory],
+      });
     }
+
+    updateTurnIndicator();
+    updateScoreHighlights();
   }
 
   function undoMove() {
@@ -369,45 +370,59 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Undo both AI and player moves
     const aiMove = moveHistory.pop();
     const playerMove = moveHistory.pop();
 
-    // Reset the cells
-    cells[aiMove.index].textContent = "";
-    cells[aiMove.index].classList.remove("x", "o");
-    board[aiMove.index] = "";
+    resetCell(aiMove.index);
+    resetCell(playerMove.index);
 
-    cells[playerMove.index].textContent = "";
-    cells[playerMove.index].classList.remove("x", "o");
+    board[aiMove.index] = "";
     board[playerMove.index] = "";
 
-    // Update history display
     updateHistory("Moves undone");
 
     currentPlayer = playerSymbol;
     updateStatusMessage();
   }
 
-  function resetRound() {
-    board = ["", "", "", "", "", "", "", "", ""];
+  function resetCell(index) {
+    const cell = cells[index];
+    if (!cell) return;
+    cell.textContent = "";
+    cell.classList.remove("x", "o", "winner");
+    cell.setAttribute("aria-label", `Empty cell ${index + 1}`);
+  }
+
+  function resetRound(silent = false) {
+    board = Array(9).fill("");
     gameActive = true;
     moveHistory = [];
 
     cells.forEach((cell) => {
+      const cellIndex = Number(cell.getAttribute("data-index"));
       cell.textContent = "";
       cell.classList.remove("x", "o", "winner");
+      cell.setAttribute("aria-label", `Empty cell ${cellIndex + 1}`);
     });
 
     currentPlayer = "X";
-    updateStatusMessage();
-
-    // If player is O, AI goes first
     if (playerSymbol === "O") {
-      setTimeout(makeAiMove, 500);
+      currentPlayer = aiSymbol;
     }
 
-    updateHistory("Round reset");
+    updateStatusMessage();
+
+    if (playerSymbol === "O") {
+      setTimeout(() => {
+        if (gameActive && currentPlayer === aiSymbol) {
+          makeAiMove();
+        }
+      }, 450);
+    }
+
+    if (!silent) {
+      updateHistory("Round reset");
+    }
   }
 
   function resetScores() {
@@ -417,42 +432,121 @@ document.addEventListener("DOMContentLoaded", () => {
     aiScoreDisplay.textContent = "0";
     gameHistory = [];
     updateHistory("Scores reset");
+    updateStatusMessage();
   }
 
   function updateStatusMessage() {
     if (gameActive) {
-      if (currentPlayer === playerSymbol) {
-        statusDisplay.textContent = "Your turn!";
-      } else {
-        statusDisplay.textContent = "AI is thinking...";
-      }
+      statusDisplay.textContent =
+        currentPlayer === playerSymbol ? "Your turn!" : "AI is thinking...";
     }
+
+    updateTurnIndicator();
+    updateScoreHighlights();
+  }
+
+  function updateTurnIndicator() {
+    if (!turnIndicator) {
+      return;
+    }
+
+    if (!gameActive) {
+      turnIndicator.textContent = "Round complete";
+      return;
+    }
+
+    const turnOwner = currentPlayer === playerSymbol ? "Your move" : "AI thinking";
+    turnIndicator.textContent = `${turnOwner} (${currentPlayer})`;
+  }
+
+  function updateScoreHighlights() {
+    if (scoreBoxes.length < 2) {
+      return;
+    }
+
+    const [playerBox, aiBox] = scoreBoxes;
+    playerBox.classList.toggle("is-active", gameActive && currentPlayer === playerSymbol);
+    aiBox.classList.toggle("is-active", gameActive && currentPlayer === aiSymbol);
   }
 
   function updateHistory(message) {
+    if (!message) {
+      return;
+    }
+
     const historyItem = document.createElement("div");
     historyItem.classList.add("history-move");
     historyItem.textContent = message;
     historyList.prepend(historyItem);
 
-    // Limit history items
-    if (historyList.children.length > 10) {
+    while (historyList.children.length > 10) {
       historyList.removeChild(historyList.lastChild);
     }
   }
 
   function toggleHistory() {
-    historyContainer.style.display =
-      historyContainer.style.display === "block" ? "none" : "block";
-    document.getElementById("history-btn").textContent =
-      historyContainer.style.display === "block"
-        ? "Hide History"
-        : "Show History";
+    const shouldShow = historyContainer.style.display !== "block";
+    historyContainer.style.display = shouldShow ? "block" : "none";
+    historyContainer.setAttribute("aria-hidden", (!shouldShow).toString());
+    historyButton.textContent = shouldShow ? "Hide History" : "Show History";
+    historyButton.setAttribute("aria-expanded", shouldShow.toString());
   }
 
-  function toggleSettings() {
-    const isVisible = settingsPanel.style.display === "block";
-    settingsPanel.style.display = isVisible ? "none" : "block";
-    overlay.style.display = isVisible ? "none" : "block";
+  function toggleSettings(forceState) {
+    const shouldShow =
+      typeof forceState === "boolean"
+        ? forceState
+        : !settingsPanel.classList.contains("is-visible");
+
+    settingsPanel.classList.toggle("is-visible", shouldShow);
+    overlay.classList.toggle("is-visible", shouldShow);
+    document.body.classList.toggle("no-scroll", shouldShow);
+    settingsPanel.setAttribute("aria-hidden", (!shouldShow).toString());
+    overlay.setAttribute("aria-hidden", (!shouldShow).toString());
+    settingsButton.setAttribute("aria-expanded", shouldShow.toString());
+
+    if (shouldShow) {
+      settingsPanel.focus({ preventScroll: true });
+    } else {
+      settingsButton.focus({ preventScroll: true });
+    }
+  }
+
+  function handleGlobalKeyDown(event) {
+    if (event.key === "Escape" && settingsPanel.classList.contains("is-visible")) {
+      toggleSettings(false);
+    }
+  }
+
+  function applyTheme(theme, { skipSave = false } = {}) {
+    document.body.setAttribute("data-theme", theme);
+    setActiveButton(themeButtons, theme, "theme");
+    if (!skipSave) {
+      safeStorage.set(storageKeys.theme, theme);
+    }
+  }
+
+  function applyDifficulty(difficulty, { skipSave = false } = {}) {
+    aiDifficulty = difficulty;
+    setActiveButton(difficultyButtons, difficulty, "difficulty");
+    if (!skipSave) {
+      safeStorage.set(storageKeys.difficulty, difficulty);
+    }
+  }
+
+  function applySymbol(symbol, { skipSave = false, skipReset = false } = {}) {
+    playerSymbol = symbol;
+    aiSymbol = playerSymbol === "X" ? "O" : "X";
+    setActiveButton(symbolButtons, symbol, "symbol");
+
+    if (!skipSave) {
+      safeStorage.set(storageKeys.symbol, symbol);
+    }
+
+    if (!skipReset) {
+      resetRound(true);
+    } else {
+      updateStatusMessage();
+    }
   }
 });
